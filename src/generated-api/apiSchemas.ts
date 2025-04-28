@@ -16,22 +16,22 @@ export type Coordinate = {
    * @format double
    */
   z?: number;
-  coordinate?: Coordinate;
   /**
    * @format double
    */
   m?: number;
+  coordinate?: Coordinate;
 };
 
 export type CoordinateSequence = {
   /**
    * @format int32
    */
-  measures?: number;
+  dimension?: number;
   /**
    * @format int32
    */
-  dimension?: number;
+  measures?: number;
 };
 
 export type CoordinateSequenceFactory = Record<string, any>;
@@ -64,11 +64,11 @@ export type Envelope = {
   /**
    * @format double
    */
-  height?: number;
+  diameter?: number;
   /**
    * @format double
    */
-  diameter?: number;
+  height?: number;
   ["null"]?: boolean;
 };
 
@@ -95,6 +95,11 @@ export type Geometry = {
   centroid?: Point;
   interiorPoint?: Point;
   boundary?: Geometry;
+  /**
+   * @format int32
+   */
+  boundaryDimension?: number;
+  envelopeInternal?: Envelope;
   geometryType?: string;
   /**
    * @format int32
@@ -104,11 +109,6 @@ export type Geometry = {
    * @format int32
    */
   numGeometries?: number;
-  /**
-   * @format int32
-   */
-  boundaryDimension?: number;
-  envelopeInternal?: Envelope;
   simple?: boolean;
   /**
    * @format double
@@ -131,12 +131,13 @@ export type LinearRing = {
   envelope?: Geometry;
   factory?: GeometryFactory;
   userData?: Record<string, any>;
-  geometryType?: string;
   /**
    * @format int32
    */
   boundaryDimension?: number;
+  geometryType?: string;
   closed?: boolean;
+  ring?: boolean;
   coordinate?: Coordinate;
   coordinates?: Coordinate[];
   /**
@@ -147,7 +148,6 @@ export type LinearRing = {
   coordinateSequence?: CoordinateSequence;
   startPoint?: Point;
   endPoint?: Point;
-  ring?: boolean;
   /**
    * @format int32
    */
@@ -169,11 +169,11 @@ export type LinearRing = {
   area?: number;
   centroid?: Point;
   interiorPoint?: Point;
+  envelopeInternal?: Envelope;
   /**
    * @format int32
    */
   numGeometries?: number;
-  envelopeInternal?: Envelope;
   simple?: boolean;
   valid?: boolean;
 };
@@ -183,6 +183,22 @@ export type Point = {
   factory?: GeometryFactory;
   userData?: Record<string, any>;
   coordinates?: Coordinate[];
+  coordinate?: Coordinate;
+  /**
+   * @format int32
+   */
+  numPoints?: number;
+  boundary?: Geometry;
+  /**
+   * @format int32
+   */
+  boundaryDimension?: number;
+  coordinateSequence?: CoordinateSequence;
+  geometryType?: string;
+  /**
+   * @format int32
+   */
+  dimension?: number;
   /**
    * @format double
    */
@@ -191,22 +207,6 @@ export type Point = {
    * @format double
    */
   y?: number;
-  coordinate?: Coordinate;
-  /**
-   * @format int32
-   */
-  numPoints?: number;
-  boundary?: Geometry;
-  coordinateSequence?: CoordinateSequence;
-  geometryType?: string;
-  /**
-   * @format int32
-   */
-  dimension?: number;
-  /**
-   * @format int32
-   */
-  boundaryDimension?: number;
   simple?: boolean;
   empty?: boolean;
   /**
@@ -221,11 +221,11 @@ export type Point = {
   area?: number;
   centroid?: Point;
   interiorPoint?: Point;
+  envelopeInternal?: Envelope;
   /**
    * @format int32
    */
   numGeometries?: number;
-  envelopeInternal?: Envelope;
   /**
    * @format double
    */
@@ -237,6 +237,11 @@ export type Polygon = {
   envelope?: Geometry;
   factory?: GeometryFactory;
   userData?: Record<string, any>;
+  exteriorRing?: LinearRing;
+  /**
+   * @format int32
+   */
+  numInteriorRing?: number;
   coordinate?: Coordinate;
   coordinates?: Coordinate[];
   /**
@@ -249,20 +254,15 @@ export type Polygon = {
    */
   area?: number;
   boundary?: Geometry;
+  /**
+   * @format int32
+   */
+  boundaryDimension?: number;
   geometryType?: string;
   /**
    * @format int32
    */
   dimension?: number;
-  exteriorRing?: LinearRing;
-  /**
-   * @format int32
-   */
-  numInteriorRing?: number;
-  /**
-   * @format int32
-   */
-  boundaryDimension?: number;
   /**
    * @format double
    */
@@ -275,11 +275,11 @@ export type Polygon = {
   precisionModel?: PrecisionModel;
   centroid?: Point;
   interiorPoint?: Point;
+  envelopeInternal?: Envelope;
   /**
    * @format int32
    */
   numGeometries?: number;
-  envelopeInternal?: Envelope;
   simple?: boolean;
   valid?: boolean;
 };
@@ -310,16 +310,16 @@ export type Property = {
    * @format int64
    */
   id?: number;
-  geom?: Polygon;
-  name?: string;
+  geom: Polygon;
+  name: string;
   mailCity?: string;
   mailZip?: string;
   mailadd?: string;
-  parcelNumber?: string;
-  path?: string;
-  useDescription?: string;
-  zoningSub?: string;
-  zoningType?: string;
+  parcelNumber: string;
+  path: string;
+  useDescription: string;
+  zoningSub: string;
+  zoningType: string;
 };
 
 export type Type = Record<string, any>;
