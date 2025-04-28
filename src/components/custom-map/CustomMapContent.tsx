@@ -1,3 +1,4 @@
+import { MAP_POLYGON_STYLE } from "@/constants/mapConfig";
 import { useGetPropertiesInBoundingBox } from "@/generated-api/apiComponents";
 import { useMapBounds } from "@/hooks/useMapBounds";
 import { TileLayer } from "react-leaflet";
@@ -20,7 +21,7 @@ export const CustomMapContent = () => {
       {data?.map((property) => {
         return (
           <GeoJSON
-            style={{ color: "red" }}
+            style={MAP_POLYGON_STYLE}
             data={property.geom as GeoJSONProps["data"]}
           />
         );
