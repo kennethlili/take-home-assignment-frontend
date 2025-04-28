@@ -7,9 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "api-codegen": "npx openapi-codegen gen api"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.74.7",
     "leaflet": "^1.9.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -17,6 +19,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@openapi-codegen/cli": "^3.1.0",
+    "@openapi-codegen/typescript": "^11.0.1",
     "@types/leaflet": "^1.9.17",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",

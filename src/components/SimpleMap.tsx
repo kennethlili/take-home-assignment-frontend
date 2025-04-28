@@ -1,6 +1,7 @@
 import type { LatLngExpression } from "leaflet";
 import { useRef } from "react";
 import { MapContainer, Polygon, TileLayer, Tooltip } from "react-leaflet";
+import { useGetPropertiesInBoundingBox } from "../generated-api/apiComponents";
 
 const purpleOptions = { color: "purple" };
 
@@ -17,6 +18,17 @@ const polygon:
 
 const SimpleMap = () => {
   const mapRef = useRef(null);
+
+  const { data } = useGetPropertiesInBoundingBox({
+    queryParams: {
+      west: -96.7981,
+      south: 32.9714,
+      east: -96.7976,
+      north: 32.972,
+    },
+  });
+
+  console.log("data", data);
 
   return (
     <MapContainer
