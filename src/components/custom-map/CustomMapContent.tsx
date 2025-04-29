@@ -1,39 +1,13 @@
 import { MAP_MAX_ZOOM, MAP_POLYGON_STYLE } from "@/constants/mapConfig";
-import type { GetPropertiesInBoundingBoxResponse } from "@/generated-api/apiComponents";
 import { useGetPropertiesInBoundingBox } from "@/generated-api/apiComponents";
 import { useMapAttributes } from "@/hooks/useMapAttributes";
-import { Marker, TileLayer, useMap } from "react-leaflet";
+import { Marker, TileLayer } from "react-leaflet";
 import type { GeoJSONProps } from "react-leaflet/GeoJSON";
 import { GeoJSON } from "react-leaflet/GeoJSON";
-import useSupercluster from "use-supercluster";
-import { useMemo } from "react";
-import { calculateCentroid } from "@/utils";
-import type { LatLngExpression } from "leaflet";
 import L from "leaflet";
-
-type PolygonFeature = Omit<
-  GetPropertiesInBoundingBoxResponse[number],
-  "geom"
-> & {
-  geom: {
-    type: "Polygon";
-    coordinates: [number, number][][];
-  };
-};
-
-interface ClusterPointFeature {
-  id: string | number;
-  type: "Feature";
-  properties: Omit<PolygonFeature, "geom"> & {
-    originalGeom: PolygonFeature["geom"];
-    cluster: boolean;
-    point_count: number;
-  };
-  geometry: {
-    type: "Point";
-    coordinates: [number, number];
-  };
-}
+import type { ClusterPointFeature } from "@/hooks/useMapClustering";
+import { useMapClustering } from "@/hooks/useMapClustering";
+import { useState } from "react";
 
 const icons: Record<number, L.DivIcon> = {};
 const fetchIcon = (count: number, size: number) => {
@@ -48,53 +22,36 @@ const fetchIcon = (count: number, size: number) => {
 };
 
 export const CustomMapContent = () => {
+  const [selectedProperties, setSelectedProperties] = useState<
+    { id: number }[]
+  >([]);
   const { zoom, bounds } = useMapAttributes();
   const { data } = useGetPropertiesInBoundingBox({
     queryParams: bounds,
   });
 
-  const points = useMemo(() => {
-    if (!data) return [];
-    return data.map((property) => {
-      const centroid = calculateCentroid(
-        property.geom.coordinates as [number, number][][]
-      );
-      const { geom, ..._property } = property;
-      return {
-        type: "Feature",
-        properties: {
-          cluster: false,
-          originalGeom: geom,
-          ..._property,
-        },
-        geometry: {
-          type: "Point",
-          coordinates: [centroid[0], centroid[1]],
-        },
-      };
-    });
-  }, [data]);
-
-  const { clusters, supercluster } = useSupercluster({
-    points,
-    bounds: [bounds.west, bounds.south, bounds.east, bounds.north],
+  const { clusters, onClusterClick, supercluster, points } = useMapClustering({
+    data,
     zoom,
-    options: { radius: 30, maxZoom: MAP_MAX_ZOOM },
+    bounds,
   });
-  const map = useMap();
 
-  function onClusterClick(
-    clusterId: number | string,
-    coordinates: LatLngExpression
-  ) {
-    const expansionZoom = Math.min(
-      supercluster.getClusterExpansionZoom(clusterId),
-      MAP_MAX_ZOOM
+  function onPropertyClick(layer: L.Layer, id: number) {
+    const isSelected = selectedProperties.some(
+      (property) => property.id === id
     );
 
-    map.setView(coordinates, expansionZoom, {
-      animate: true,
-    });
+    if (isSelected) {
+      // Deselect
+      setSelectedProperties((prev) =>
+        prev.filter((property) => property.id !== id)
+      );
+      (layer as L.Path).setStyle(MAP_POLYGON_STYLE.Default);
+    } else {
+      // Select
+      setSelectedProperties((prev) => [...prev, { id }]);
+      (layer as L.Path).setStyle(MAP_POLYGON_STYLE.Selected);
+    }
   }
 
   return (
@@ -118,8 +75,13 @@ export const CustomMapContent = () => {
               return (
                 <GeoJSON
                   key={`property-${point.properties.id}`}
-                  style={MAP_POLYGON_STYLE}
+                  style={MAP_POLYGON_STYLE.Default}
                   data={point.properties.originalGeom as GeoJSONProps["data"]}
+                  onEachFeature={(feature, layer) => {
+                    layer.on("click", () => {
+                      onPropertyClick(layer, cluster.properties.id);
+                    });
+                  }}
                 />
               );
             });
@@ -145,8 +107,13 @@ export const CustomMapContent = () => {
         return (
           <GeoJSON
             key={`property-${cluster.properties.id}`}
-            style={MAP_POLYGON_STYLE}
+            style={MAP_POLYGON_STYLE.Default}
             data={cluster.properties.originalGeom as GeoJSONProps["data"]}
+            onEachFeature={(feature, layer) => {
+              layer.on("click", () => {
+                onPropertyClick(layer, cluster.properties.id);
+              });
+            }}
           />
         );
       })}
