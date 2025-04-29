@@ -1,3 +1,18 @@
 {
-    "plugins": ["prettier-plugin-tailwindcss"]
-  }
+  "plugins": [
+    "prettier-plugin-tailwindcss",
+    "@ianvs/prettier-plugin-sort-imports"
+  ],
+  "importOrder": [
+    "^react$",
+    "<BUILTIN_MODULES>",
+    "<THIRD_PARTY_MODULES>",
+    "^@/*/(.*)$",
+    "^@assets/*/(.*)$",
+    "^[../]",
+    "^[./]",
+    "<TYPES>",
+    ".(css|scss)$"
+  ],
+  "importOrderSeparation": true
+}

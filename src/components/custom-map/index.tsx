@@ -1,6 +1,6 @@
-import { MAP_CENTER, MAP_MAX_ZOOM, MAP_ZOOM } from "@/constants/mapConfig";
 import { useRef } from "react";
 import { MapContainer } from "react-leaflet";
+import { MAP_CENTER, MAP_MAX_ZOOM, MAP_ZOOM } from "@/constants/mapConfig";
 import { CustomMapContent } from "./CustomMapContent";
 
 export const CustomMap = ({
