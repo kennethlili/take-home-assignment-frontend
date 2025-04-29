@@ -1,4 +1,4 @@
-import { MAP_MAX_ZOOM, MAP_POLYGON_STYLE } from "@/constants/mapConfig";
+import { MAP_MAX_ZOOM } from "@/constants/mapConfig";
 import { useGetPropertiesInBoundingBox } from "@/generated-api/apiComponents";
 import { useMapAttributes } from "@/hooks/useMapAttributes";
 import { Marker, TileLayer } from "react-leaflet";
@@ -45,21 +45,14 @@ export const CustomMapContent = ({
   });
 
   function onPropertyClick(layer: L.Layer, id: number) {
-    const isSelected = selectedProperties.some(
-      (property) => property.id === id
-    );
-
-    if (isSelected) {
-      // Deselect
-      setSelectedProperties((prev) =>
-        prev.filter((property) => property.id !== id)
-      );
-      (layer as L.Path).setStyle(MAP_POLYGON_STYLE.Default);
-    } else {
-      // Select
-      setSelectedProperties((prev) => [...prev, { id }]);
-      (layer as L.Path).setStyle(MAP_POLYGON_STYLE.Selected);
-    }
+    setSelectedProperties((prev) => {
+      const isSelected = prev.some((property) => property.id === id);
+      if (isSelected) {
+        return prev.filter((property) => property.id !== id);
+      } else {
+        return [...prev, { id }];
+      }
+    });
   }
 
   return (
@@ -85,7 +78,7 @@ export const CustomMapContent = ({
                   key={`property-${point.properties.id}`}
                   data={point.properties.originalGeom as GeoJSONProps["data"]}
                   isSelected={selectedProperties.some(
-                    (property) => property.id === point.properties.id
+                    (property) => property.id === point.properties.id,
                   )}
                   onEachFeature={(feature, layer) => {
                     layer.on("click", () => {
@@ -103,7 +96,7 @@ export const CustomMapContent = ({
               position={[latitude, longitude]}
               icon={fetchIcon(
                 pointCount,
-                10 + (pointCount / points.length) * 40
+                10 + (pointCount / points.length) * 40,
               )}
               eventHandlers={{
                 click: () => {
@@ -119,7 +112,7 @@ export const CustomMapContent = ({
             key={`property-${cluster.properties.id}`}
             data={cluster.properties.originalGeom as GeoJSONProps["data"]}
             isSelected={selectedProperties.some(
-              (property) => property.id === cluster.properties.id
+              (property) => property.id === cluster.properties.id,
             )}
             onEachFeature={(feature, layer) => {
               layer.on("click", () => {
