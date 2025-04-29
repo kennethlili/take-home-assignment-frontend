@@ -4,3 +4,21 @@
   padding: 2rem;
   text-align: center;
 }
+
+
+.leaflet-div-icon {
+  background: none !important;
+  border: none !important;
+}
+
+.cluster-marker {
+  color: #fff;
+  background: #1978c8;
+  border-radius: 50%;
+  padding: 10px;
+  width: 10px;
+  height: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
