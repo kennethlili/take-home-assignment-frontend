@@ -3,11 +3,10 @@ import { useGetPropertiesInBoundingBox } from "@/generated-api/apiComponents";
 import { useMapAttributes } from "@/hooks/useMapAttributes";
 import { Marker, TileLayer } from "react-leaflet";
 import type { GeoJSONProps } from "react-leaflet/GeoJSON";
-import { GeoJSON } from "react-leaflet/GeoJSON";
 import L from "leaflet";
 import type { ClusterPointFeature } from "@/hooks/useMapClustering";
 import { useMapClustering } from "@/hooks/useMapClustering";
-import { useState } from "react";
+import { GeoJsonPolygon } from "./GeoJsonPolygon";
 
 const icons: Record<number, L.DivIcon> = {};
 const fetchIcon = (count: number, size: number) => {
@@ -21,10 +20,19 @@ const fetchIcon = (count: number, size: number) => {
   return icons[count];
 };
 
-export const CustomMapContent = () => {
-  const [selectedProperties, setSelectedProperties] = useState<
-    { id: number }[]
-  >([]);
+export const CustomMapContent = ({
+  selectedProperties,
+  setSelectedProperties,
+}: {
+  selectedProperties: { id: number }[];
+  setSelectedProperties: React.Dispatch<
+    React.SetStateAction<
+      {
+        id: number;
+      }[]
+    >
+  >;
+}) => {
   const { zoom, bounds } = useMapAttributes();
   const { data } = useGetPropertiesInBoundingBox({
     queryParams: bounds,
@@ -73,13 +81,15 @@ export const CustomMapContent = () => {
             const clusterPts = supercluster.getChildren(cluster.id);
             return clusterPts.map((point: ClusterPointFeature) => {
               return (
-                <GeoJSON
+                <GeoJsonPolygon
                   key={`property-${point.properties.id}`}
-                  style={MAP_POLYGON_STYLE.Default}
                   data={point.properties.originalGeom as GeoJSONProps["data"]}
+                  isSelected={selectedProperties.some(
+                    (property) => property.id === point.properties.id
+                  )}
                   onEachFeature={(feature, layer) => {
                     layer.on("click", () => {
-                      onPropertyClick(layer, cluster.properties.id);
+                      onPropertyClick(layer, point.properties.id);
                     });
                   }}
                 />
@@ -105,10 +115,12 @@ export const CustomMapContent = () => {
         }
 
         return (
-          <GeoJSON
+          <GeoJsonPolygon
             key={`property-${cluster.properties.id}`}
-            style={MAP_POLYGON_STYLE.Default}
             data={cluster.properties.originalGeom as GeoJSONProps["data"]}
+            isSelected={selectedProperties.some(
+              (property) => property.id === cluster.properties.id
+            )}
             onEachFeature={(feature, layer) => {
               layer.on("click", () => {
                 onPropertyClick(layer, cluster.properties.id);

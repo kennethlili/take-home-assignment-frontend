@@ -3,7 +3,19 @@ import { useRef } from "react";
 import { MapContainer } from "react-leaflet";
 import { CustomMapContent } from "./CustomMapContent";
 
-export const CustomMap = () => {
+export const CustomMap = ({
+  selectedProperties,
+  setSelectedProperties,
+}: {
+  selectedProperties: { id: number }[];
+  setSelectedProperties: React.Dispatch<
+    React.SetStateAction<
+      {
+        id: number;
+      }[]
+    >
+  >;
+}) => {
   const mapRef = useRef(null);
 
   return (
@@ -12,9 +24,12 @@ export const CustomMap = () => {
       zoom={MAP_ZOOM}
       ref={mapRef}
       maxZoom={MAP_MAX_ZOOM}
-      style={{ height: "100vh", width: "100vw" }}
+      className="h-full w-screen"
     >
-      <CustomMapContent />
+      <CustomMapContent
+        selectedProperties={selectedProperties}
+        setSelectedProperties={setSelectedProperties}
+      />
     </MapContainer>
   );
 };
