@@ -1,4 +1,6 @@
+import { AppSidebar } from "@/components/AppSidebar";
 import { CustomMap } from "@/components/custom-map";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { useState } from "react";
 
 const MapPage = () => {
@@ -7,11 +9,13 @@ const MapPage = () => {
   >([]);
   return (
     <div className="h-screen w-screen">
-      <div className="h-max bg-accent">test</div>
-      <CustomMap
-        selectedProperties={selectedProperties}
-        setSelectedProperties={setSelectedProperties}
-      />
+      <SidebarProvider>
+        <AppSidebar />
+        <CustomMap
+          selectedProperties={selectedProperties}
+          setSelectedProperties={setSelectedProperties}
+        />
+      </SidebarProvider>
     </div>
   );
 };

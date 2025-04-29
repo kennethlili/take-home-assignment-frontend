@@ -24,7 +24,7 @@ export const CustomMap = ({
       zoom={MAP_ZOOM}
       ref={mapRef}
       maxZoom={MAP_MAX_ZOOM}
-      className="h-full w-screen"
+      className="h-screen w-full"
     >
       <CustomMapContent
         selectedProperties={selectedProperties}
