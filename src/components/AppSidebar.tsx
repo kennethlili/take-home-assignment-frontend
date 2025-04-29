@@ -1,64 +1,80 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
-
+import { X } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Button } from "./ui/button";
 
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-];
-
-export function AppSidebar() {
+export function AppSidebar({
+  selectedProperties,
+  onClearSelection,
+  onDeselectProperty,
+}: {
+  selectedProperties: { id: number }[];
+  onClearSelection: () => void;
+  onDeselectProperty: (propertyId: number) => void;
+}) {
+  function handleProceedClick() {}
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Selected Properties</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
+            <div className="space-y-4 p-4">
+              {/* Display count of selected properties */}
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">
+                  {selectedProperties.length}{" "}
+                  {selectedProperties.length === 1 ? "property" : "properties"}{" "}
+                  selected
+                </span>
+
+                {/* Clear selection button */}
+                {selectedProperties.length > 0 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={onClearSelection}
+                    className="flex items-center gap-1"
+                  >
+                    <X size={14} />
+                    <span>Clear</span>
+                  </Button>
+                )}
+              </div>
+
+              {/* List of selected properties could go here */}
+              {selectedProperties.length > 0 && (
+                <div className="max-h-40 space-y-1 overflow-y-auto rounded-md border p-2">
+                  {selectedProperties.map((property) => (
+                    <div
+                      key={property.id}
+                      className="flex items-center justify-between border-b py-1 text-xs last:border-0"
+                    >
+                      Property #{property.id}
+                      <Button
+                        variant={"ghost"}
+                        onClick={() => onDeselectProperty(property.id)}
+                      >
+                        <X size={14} />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <Button
+                onClick={handleProceedClick}
+                disabled={selectedProperties.length === 0}
+                className="flex w-full gap-2"
+              >
+                Update Zoning Type
+              </Button>
+            </div>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
