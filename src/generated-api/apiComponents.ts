@@ -14,6 +14,49 @@ type QueryFnOptions = {
   signal?: AbortController["signal"];
 };
 
+export type UpsertZoningTypesError = Fetcher.ErrorWrapper<undefined>;
+
+export type UpsertZoningTypesResponse = Schemas.ZoningType[];
+
+export type UpsertZoningTypesVariables = {
+  body: Schemas.ZoningUpdateRequest;
+} & ApiContext["fetcherOptions"];
+
+export const fetchUpsertZoningTypes = (
+  variables: UpsertZoningTypesVariables,
+  signal?: AbortSignal,
+) =>
+  apiFetch<
+    UpsertZoningTypesResponse,
+    UpsertZoningTypesError,
+    Schemas.ZoningUpdateRequest,
+    {},
+    {},
+    {}
+  >({ url: "/api/properties/zoning", method: "put", ...variables, signal });
+
+export const useUpsertZoningTypes = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      UpsertZoningTypesResponse,
+      UpsertZoningTypesError,
+      UpsertZoningTypesVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useApiContext();
+  return reactQuery.useMutation<
+    UpsertZoningTypesResponse,
+    UpsertZoningTypesError,
+    UpsertZoningTypesVariables
+  >({
+    mutationFn: (variables: UpsertZoningTypesVariables) =>
+      fetchUpsertZoningTypes(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
+
 export type GetPropertiesInBoundingBoxQueryParams = {
   /**
    * @format double
