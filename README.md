@@ -102,6 +102,8 @@ npm run build
 
 The project uses OpenAPI code generation to create TypeScript types and React Query hooks:
 
+Please refer to https://github.com/fabien0102/openapi-codegen
+
 - Generate API from the production endpoint:
 
   ```bash
