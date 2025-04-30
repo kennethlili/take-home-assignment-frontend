@@ -44,7 +44,7 @@ export const CustomMap = ({
       zoom={MAP_ZOOM}
       ref={mapRef}
       maxZoom={MAP_MAX_ZOOM}
-      className="h-screen w-full z-10"
+      className="z-10 h-full w-svw"
     >
       <CustomMapContent
         data={data}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AppHeader } from "@/components/AppHeader";
 import { CustomMap } from "@/components/custom-map";
 import { AppSidebar } from "@/components/sidebar/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -32,7 +33,7 @@ const MapPage = () => {
 
   return (
     <>
-      <div className="h-screen w-screen">
+      <div className="h-svh max-w-svw">
         <SidebarProvider>
           <AppSidebar
             onClickUpdateZoningType={() => {
@@ -44,16 +45,19 @@ const MapPage = () => {
             selectedProperty={selectedProperty}
             data={data}
           />
-          <CustomMap
-            isLoading={isFetching}
-            data={data}
-            selectedProperties={selectedProperties}
-            setSelectedProperties={setSelectedProperties}
-            setSelectedProperty={setSelectedProperty}
-            handleMapMove={handleMapMove}
-            zoom={zoom}
-            bounds={bounds}
-          />
+          <div className="flex h-svh w-full flex-col">
+            <AppHeader />
+            <CustomMap
+              isLoading={isFetching}
+              data={data}
+              selectedProperties={selectedProperties}
+              setSelectedProperties={setSelectedProperties}
+              setSelectedProperty={setSelectedProperty}
+              handleMapMove={handleMapMove}
+              zoom={zoom}
+              bounds={bounds}
+            />
+          </div>
         </SidebarProvider>
       </div>
       <UpdateZoningTypeDialog
