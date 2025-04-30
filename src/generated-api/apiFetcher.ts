@@ -1,6 +1,8 @@
 import { ApiContext } from "./apiContext";
 
-const baseUrl = "http://localhost:8080";
+const baseUrl =
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://spatial-laser-backend.onrender.com";
 
 export type ErrorWrapper<TError> =
   | TError
