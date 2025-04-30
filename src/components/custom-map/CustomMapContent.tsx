@@ -15,7 +15,7 @@ const icons: Record<number, L.DivIcon> = {};
 const fetchIcon = (count: number, size: number) => {
   if (!icons[count]) {
     icons[count] = L.divIcon({
-      html: `<div class="cluster-marker" style="width: ${size}px; height: ${size}px;">
+      html: `<div class="text-white bg-blue-600 rounded-full p-2.5 w-2.5 h-2.5 flex justify-center items-center" style="width: ${size}px; height: ${size}px;">
         ${count}
       </div>`,
     });

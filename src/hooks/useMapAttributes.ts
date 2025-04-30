@@ -23,7 +23,7 @@ export function useMapAttributes() {
       setBounds(bounds);
       setZoom(zoom);
     },
-    500,
+    300,
   );
 
   return { zoom, bounds, handleMapMove };
