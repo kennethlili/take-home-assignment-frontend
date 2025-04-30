@@ -1,16 +1,16 @@
-import {
-  skipToken,
-  type DefaultError,
-  type Enabled,
-  type QueryKey,
-  type UseQueryOptions,
-} from "@tanstack/react-query";
+import { skipToken } from "@tanstack/react-query";
 import { QueryOperation } from "./apiComponents";
+import type {
+  DefaultError,
+  Enabled,
+  QueryKey,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 
 export type ApiContext<
   TQueryFnData = unknown,
   TError = DefaultError,
-  TData = TQueryFnData,
+  _TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
 > = {
   fetcherOptions: {

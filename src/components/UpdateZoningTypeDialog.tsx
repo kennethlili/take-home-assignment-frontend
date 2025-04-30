@@ -114,7 +114,7 @@ export const UpdateZoningTypeDialog = ({
               <SelectValue placeholder="Zoning Type" />
             </SelectTrigger>
             <SelectContent>
-              {Object.entries(ZONING_TYPE).map(([key, value]) => (
+              {Object.entries(ZONING_TYPE).map(([_key, value]) => (
                 <SelectItem key={value} value={value}>
                   {value}
                 </SelectItem>
