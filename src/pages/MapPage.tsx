@@ -42,6 +42,7 @@ const MapPage = () => {
             selectedProperties={selectedProperties}
             onDeselectProperty={onDeselectProperty}
             selectedProperty={selectedProperty}
+            data={data}
           />
           <CustomMap
             isLoading={isFetching}

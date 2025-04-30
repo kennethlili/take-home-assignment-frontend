@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import type { ZoningType } from "@/constants/enums";
+import type { ZoningEnumType } from "@/constants/enums";
 import type { Property } from "@/generated-api/apiSchemas";
 import type { InvalidateQueryFilters } from "@tanstack/react-query";
 
@@ -39,7 +39,7 @@ export const UpdateZoningTypeDialog = ({
   setSelectedProperty: React.Dispatch<React.SetStateAction<Property | null>>;
 }) => {
   const [selectedZoningType, setSelectedZoningType] =
-    useState<ZoningType | null>(null);
+    useState<ZoningEnumType | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -108,7 +108,9 @@ export const UpdateZoningTypeDialog = ({
             selected
           </span>
           <Select
-            onValueChange={(data: ZoningType) => setSelectedZoningType(data)}
+            onValueChange={(data: ZoningEnumType) =>
+              setSelectedZoningType(data)
+            }
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Zoning Type" />

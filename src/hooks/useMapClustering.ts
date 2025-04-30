@@ -1,10 +1,11 @@
 import { useMemo } from "react";
+import * as turf from "@turf/turf";
 import { useMap } from "react-leaflet";
 import useSupercluster from "use-supercluster";
 import { MAP_MAX_ZOOM } from "@/constants/mapConfig";
-import { calculateCentroid } from "@/utils";
 import type { GetPropertiesInBoundingBoxResponse } from "@/generated-api/apiComponents";
 import type { Property } from "@/generated-api/apiSchemas";
+import type { Position } from "geojson";
 import type { LatLngExpression } from "leaflet";
 
 export interface ClusterPointFeature {
@@ -42,19 +43,15 @@ export function useMapClustering({
   const points = useMemo(() => {
     if (!data) return [];
     return data.map((property) => {
-      const centroid = calculateCentroid(
-        property.geom.coordinates as [number, number][][],
-      );
+      const polygon = turf.polygon(property.geom.coordinates as Position[][]);
+      const centroid = turf.centroid(polygon);
       return {
         type: "Feature",
         properties: {
           cluster: false,
           property,
         },
-        geometry: {
-          type: "Point",
-          coordinates: [centroid[0], centroid[1]],
-        },
+        geometry: centroid.geometry,
       };
     });
   }, [data]);

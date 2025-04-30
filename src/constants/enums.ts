@@ -5,4 +5,4 @@ export const ZONING_TYPE = {
   Planned: "Planned",
 } as const;
 
-export type ZoningType = (typeof ZONING_TYPE)[keyof typeof ZONING_TYPE];
+export type ZoningEnumType = (typeof ZONING_TYPE)[keyof typeof ZONING_TYPE];

@@ -2,7 +2,18 @@ import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
 import { Separator } from "../ui/separator";
 import { SelectedProperties } from "./SelectedProperties";
 import { SelectedPropertyInfo } from "./SelectedPropertyInfo";
+import { SelectedPropertyStats } from "./SelectedPropertyStats";
+import type { GetPropertiesInBoundingBoxResponse } from "@/generated-api/apiComponents";
 import type { Property } from "@/generated-api/apiSchemas";
+
+interface AppSidebarProps {
+  data: GetPropertiesInBoundingBoxResponse | undefined;
+  selectedProperties: { id: number }[];
+  onClearSelection: () => void;
+  onDeselectProperty: (propertyId: number) => void;
+  onClickUpdateZoningType: () => void;
+  selectedProperty: Property | null;
+}
 
 export function AppSidebar({
   selectedProperties,
@@ -10,16 +21,16 @@ export function AppSidebar({
   onDeselectProperty,
   onClickUpdateZoningType,
   selectedProperty,
-}: {
-  selectedProperties: { id: number }[];
-  onClearSelection: () => void;
-  onDeselectProperty: (propertyId: number) => void;
-  onClickUpdateZoningType: () => void;
-  selectedProperty: Property | null;
-}) {
+  data,
+}: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarContent>
+        <SelectedPropertyStats
+          selectedProperties={selectedProperties}
+          data={data}
+        />
+        <Separator />
         <SelectedPropertyInfo currentProperty={selectedProperty} />
         <Separator />
         <SelectedProperties
