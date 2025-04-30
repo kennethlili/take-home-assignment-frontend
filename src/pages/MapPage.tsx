@@ -3,6 +3,8 @@ import { CustomMap } from "@/components/custom-map";
 import { AppSidebar } from "@/components/sidebar/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { UpdateZoningTypeDialog } from "@/components/UpdateZoningTypeDialog";
+import { useGetPropertiesInBoundingBox } from "@/generated-api/apiComponents";
+import { useMapAttributes } from "@/hooks/useMapAttributes";
 import type { Property } from "@/generated-api/apiSchemas";
 
 const MapPage = () => {
@@ -13,6 +15,12 @@ const MapPage = () => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(
     null,
   );
+
+  const { bounds, handleMapMove, zoom } = useMapAttributes();
+
+  const { data } = useGetPropertiesInBoundingBox({
+    queryParams: bounds,
+  });
   function onClearSelection() {
     setSelectedProperties([]);
   }
@@ -36,9 +44,13 @@ const MapPage = () => {
             selectedProperty={selectedProperty}
           />
           <CustomMap
+            data={data}
             selectedProperties={selectedProperties}
             setSelectedProperties={setSelectedProperties}
             setSelectedProperty={setSelectedProperty}
+            handleMapMove={handleMapMove}
+            zoom={zoom}
+            bounds={bounds}
           />
         </SidebarProvider>
       </div>

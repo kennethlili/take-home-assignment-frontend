@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import L from "leaflet";
-import { Marker, TileLayer } from "react-leaflet";
+import { Marker, TileLayer, useMap } from "react-leaflet";
 import { MAP_MAX_ZOOM } from "@/constants/mapConfig";
-import { useGetPropertiesInBoundingBox } from "@/generated-api/apiComponents";
-import { useMapAttributes } from "@/hooks/useMapAttributes";
 import { useMapClustering } from "@/hooks/useMapClustering";
 import { GeoJsonPolygon } from "./GeoJsonPolygon";
+import type { GetPropertiesInBoundingBoxResponse } from "@/generated-api/apiComponents";
 import type { Property } from "@/generated-api/apiSchemas";
+import type { MapBounds } from "@/hooks/useMapAttributes";
 import type { ClusterPointFeature } from "@/hooks/useMapClustering";
 import type { GeoJSONProps } from "react-leaflet/GeoJSON";
+import type { DebouncedState } from "use-debounce";
 
 const icons: Record<number, L.DivIcon> = {};
 const fetchIcon = (count: number, size: number) => {
@@ -22,11 +23,8 @@ const fetchIcon = (count: number, size: number) => {
   return icons[count];
 };
 
-export const CustomMapContent = ({
-  selectedProperties,
-  setSelectedProperties,
-  setSelectedProperty,
-}: {
+interface CustomMapContentProps {
+  data: GetPropertiesInBoundingBoxResponse | undefined;
   selectedProperties: { id: number }[];
   setSelectedProperties: React.Dispatch<
     React.SetStateAction<
@@ -36,11 +34,50 @@ export const CustomMapContent = ({
     >
   >;
   setSelectedProperty: React.Dispatch<React.SetStateAction<Property | null>>;
-}) => {
-  const { zoom, bounds } = useMapAttributes();
-  const { data } = useGetPropertiesInBoundingBox({
-    queryParams: bounds,
-  });
+  handleMapMove: DebouncedState<
+    ({ bounds, zoom }: { bounds: MapBounds; zoom: number }) => void
+  >;
+  bounds: MapBounds;
+  zoom: number;
+}
+
+export const CustomMapContent = ({
+  data,
+  selectedProperties,
+  setSelectedProperties,
+  setSelectedProperty,
+  handleMapMove,
+  zoom,
+  bounds,
+}: CustomMapContentProps) => {
+  const map = useMap();
+
+  useEffect(() => {
+    function setMapAttributes() {
+      const bounds = map.getBounds();
+      const zoom = map.getZoom();
+      handleMapMove({
+        bounds: {
+          west: bounds.getWest(),
+          south: bounds.getSouth(),
+          east: bounds.getEast(),
+          north: bounds.getNorth(),
+        },
+        zoom,
+      });
+    }
+
+    setMapAttributes();
+
+    // Update attributes on move/zoom
+    map.on("moveend", setMapAttributes);
+    map.on("zoomend", setMapAttributes);
+
+    return () => {
+      map.off("moveend", setMapAttributes);
+      map.off("zoomend", setMapAttributes);
+    };
+  }, [map]);
 
   const { clusters, onClusterClick, supercluster, points } = useMapClustering({
     data,
