@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { skipToken, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ZONING_TYPE } from "@/constants/enums";
 import { useUpsertZoningTypes } from "@/generated-api/apiComponents";
+import { queryKeyFn } from "@/generated-api/apiContext";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -20,41 +22,73 @@ import {
   SelectValue,
 } from "./ui/select";
 import type { ZoningType } from "@/constants/enums";
+import type { Property } from "@/generated-api/apiSchemas";
+import type { InvalidateQueryFilters } from "@tanstack/react-query";
 
 export const UpdateZoningTypeDialog = ({
   isOpen,
   onClose,
   selectedProperties,
+  selectedProperty,
+  setSelectedProperty,
 }: {
   isOpen: boolean;
   onClose: () => void;
   selectedProperties: { id: number }[];
+  selectedProperty: Property | null;
+  setSelectedProperty: React.Dispatch<React.SetStateAction<Property | null>>;
 }) => {
   const [selectedZoningType, setSelectedZoningType] =
     useState<ZoningType | null>(null);
-  const mutation = useUpsertZoningTypes({});
+
+  const queryClient = useQueryClient();
+
+  function refetchProperties() {
+    const queryKey = queryKeyFn({
+      path: "/api/properties",
+      operationId: "getPropertiesInBoundingBox",
+      variables: skipToken,
+    }) as InvalidateQueryFilters["queryKey"];
+    queryClient.invalidateQueries({ queryKey: queryKey });
+  }
+
+  const { isPending: isLoading, mutate } = useUpsertZoningTypes({
+    onSuccess: (responseData) => {
+      // clear the cache for the properties in the bounding box
+      refetchProperties();
+      // update the selected property if it is in the response
+      if (
+        selectedProperty &&
+        responseData.some(
+          (property) => property.propertyRefId === selectedProperty?.id,
+        )
+      ) {
+        setSelectedProperty((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            zoningType: selectedZoningType!,
+          };
+        });
+      }
+
+      toast.success("Zoning type updated successfully");
+      onClose();
+    },
+  });
 
   const isValid = selectedZoningType !== null && selectedProperties.length > 0;
-  const isLoading = mutation.isPending;
   const handleSubmit = () => {
     if (!isValid) {
       toast.error("Please select a zoning type and at least one property.");
       return;
     }
-    mutation.mutate(
-      {
-        body: {
-          propertyIds: selectedProperties.map((p) => p.id),
-          zoningType: selectedZoningType,
-        },
+    mutate({
+      body: {
+        propertyIds: selectedProperties.map((p) => p.id),
+        zoningType: selectedZoningType,
       },
-      {
-        onSuccess: () => {
-          toast.success("Zoning type updated successfully");
-          onClose();
-        },
-      },
-    );
+    });
   };
 
   return (

@@ -48,6 +48,8 @@ const MapPage = () => {
           setIsOpen(false);
         }}
         selectedProperties={selectedProperties}
+        selectedProperty={selectedProperty}
+        setSelectedProperty={setSelectedProperty}
       />
     </>
   );

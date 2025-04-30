@@ -11,9 +11,9 @@ export interface ClusterPointFeature {
   id: string | number;
   type: "Feature";
   properties: {
-    property: Property;
     cluster: boolean;
     point_count: number;
+    property?: Property;
   };
   geometry: {
     type: "Point";
@@ -61,7 +61,10 @@ export function useMapClustering({
     points,
     bounds: [bounds.west, bounds.south, bounds.east, bounds.north],
     zoom,
-    options: { radius: 30, maxZoom: MAP_MAX_ZOOM },
+    options: {
+      radius: 30,
+      maxZoom: MAP_MAX_ZOOM,
+    },
   });
 
   function onClusterClick(

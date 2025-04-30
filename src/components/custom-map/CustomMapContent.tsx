@@ -1,3 +1,4 @@
+import React from "react";
 import L from "leaflet";
 import { Marker, TileLayer } from "react-leaflet";
 import { MAP_MAX_ZOOM } from "@/constants/mapConfig";
@@ -47,7 +48,7 @@ export const CustomMapContent = ({
     bounds,
   });
 
-  function onPropertyClick(layer: L.Layer, property: Property) {
+  function onPropertyClick(property: Property) {
     setSelectedProperty(property);
     setSelectedProperties((prev) => {
       const isSelected = prev.some((item) => item.id === property.id);
@@ -77,17 +78,20 @@ export const CustomMapContent = ({
           if (zoom === MAP_MAX_ZOOM) {
             const clusterPts = supercluster.getChildren(cluster.id);
             return clusterPts.map((point: ClusterPointFeature) => {
+              const property = point.properties.property;
+              if (!property) {
+                return <React.Fragment key={point.id} />;
+              }
+
               return (
                 <GeoJsonPolygon
-                  key={`property-${point.properties.property.id}`}
-                  data={point.properties.property.geom as GeoJSONProps["data"]}
+                  key={`property-${property.id}`}
+                  data={property.geom as GeoJSONProps["data"]}
                   isSelected={selectedProperties.some(
-                    (property) => property.id === point.properties.property.id,
+                    (property) => property.id === property.id,
                   )}
-                  onEachFeature={(feature, layer) => {
-                    layer.on("click", () => {
-                      onPropertyClick(layer, point.properties.property);
-                    });
+                  onClick={() => {
+                    onPropertyClick(property);
                   }}
                 />
               );
@@ -111,17 +115,20 @@ export const CustomMapContent = ({
           );
         }
 
+        const property = cluster.properties.property;
+        if (!property) {
+          return <React.Fragment key={cluster.id} />;
+        }
+
         return (
           <GeoJsonPolygon
-            key={`property-${cluster.properties.property.id}`}
-            data={cluster.properties.property.geom as GeoJSONProps["data"]}
+            key={`property-${property.id}`}
+            data={property.geom as GeoJSONProps["data"]}
             isSelected={selectedProperties.some(
-              (property) => property.id === cluster.properties.property.id,
+              (_property) => _property.id === property.id,
             )}
-            onEachFeature={(feature, layer) => {
-              layer.on("click", () => {
-                onPropertyClick(layer, cluster.properties.property);
-              });
+            onClick={() => {
+              onPropertyClick(property);
             }}
           />
         );
