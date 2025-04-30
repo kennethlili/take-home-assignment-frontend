@@ -19,7 +19,7 @@ const MapPage = () => {
 
   const { bounds, handleMapMove, zoom } = useMapAttributes();
 
-  const { data, isFetching } = useGetPropertiesInBoundingBox({
+  const { data, isLoading } = useGetPropertiesInBoundingBox({
     queryParams: bounds,
   });
   function onClearSelection() {
@@ -48,7 +48,7 @@ const MapPage = () => {
           <div className="flex h-svh w-full flex-col">
             <AppHeader />
             <CustomMap
-              isLoading={isFetching}
+              isLoading={isLoading}
               data={data}
               selectedProperties={selectedProperties}
               setSelectedProperties={setSelectedProperties}
