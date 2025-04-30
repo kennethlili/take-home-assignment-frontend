@@ -20,6 +20,7 @@ Spatial Laser utilizes modern web technologies to provide a seamless and efficie
 - **Leaflet**: Powers interactive mapping and geospatial visualization.
 - **TanStack Query (React Query)**: Optimizes API data fetching and caching.
 - **Turf.js**: Supports advanced geospatial calculations and analysis.
+  **Supercluster**: Enables high-performance clustering of map points, ensuring smooth and efficient visualization of large datasets on interactive maps.
 
 ## Features
 
@@ -42,6 +43,12 @@ Spatial Laser utilizes modern web technologies to provide a seamless and efficie
 - Fully responsive design for desktop and mobile devices.
 - Toggle between dark and light themes.
 - Collapsible sidebar to maximize map viewing space.
+
+### Advanced Clustering
+
+The application uses Supercluster for efficient handling of large property datasets:
+
+- **Polygon-to-Point Conversion**: Property polygons are converted to centroid points using Turf.js's centroid function, allowing the clustering algorithm to work with points instead of complex polygons.
 
 ## Getting Started
 
