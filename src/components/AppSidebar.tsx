@@ -12,12 +12,13 @@ export function AppSidebar({
   selectedProperties,
   onClearSelection,
   onDeselectProperty,
+  onClickUpdateZoningType,
 }: {
   selectedProperties: { id: number }[];
   onClearSelection: () => void;
   onDeselectProperty: (propertyId: number) => void;
+  onClickUpdateZoningType: () => void;
 }) {
-  function handleProceedClick() {}
   return (
     <Sidebar>
       <SidebarContent>
@@ -68,7 +69,7 @@ export function AppSidebar({
               )}
 
               <Button
-                onClick={handleProceedClick}
+                onClick={onClickUpdateZoningType}
                 disabled={selectedProperties.length === 0}
                 className="flex w-full gap-2"
               >

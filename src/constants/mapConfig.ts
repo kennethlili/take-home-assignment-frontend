@@ -14,7 +14,7 @@ export const MAP_POLYGON_STYLE: Record<"Default" | "Selected", PathOptions> = {
     fillOpacity: 0.5,
   },
   Selected: {
-    color: "#ff0000",
+    color: "#ff6b33",
     weight: 3,
     opacity: 1,
     fillOpacity: 0.7,
