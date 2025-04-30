@@ -1,14 +1,18 @@
 import { useState } from "react";
-import { AppSidebar } from "@/components/AppSidebar";
 import { CustomMap } from "@/components/custom-map";
+import { AppSidebar } from "@/components/sidebar/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { UpdateZoningTypeDialog } from "@/components/UpdateZoningTypeDialog";
+import type { Property } from "@/generated-api/apiSchemas";
 
 const MapPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedProperties, setSelectedProperties] = useState<
     { id: number }[]
   >([]);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(
+    null,
+  );
   function onClearSelection() {
     setSelectedProperties([]);
   }
@@ -29,10 +33,12 @@ const MapPage = () => {
             onClearSelection={onClearSelection}
             selectedProperties={selectedProperties}
             onDeselectProperty={onDeselectProperty}
+            selectedProperty={selectedProperty}
           />
           <CustomMap
             selectedProperties={selectedProperties}
             setSelectedProperties={setSelectedProperties}
+            setSelectedProperty={setSelectedProperty}
           />
         </SidebarProvider>
       </div>

@@ -1,26 +1,17 @@
-import { MAP_MAX_ZOOM } from "@/constants/mapConfig";
-import type { GetPropertiesInBoundingBoxResponse } from "@/generated-api/apiComponents";
-import { calculateCentroid } from "@/utils";
-import type { LatLngExpression } from "leaflet";
 import { useMemo } from "react";
 import { useMap } from "react-leaflet";
 import useSupercluster from "use-supercluster";
-
-type PolygonFeature = Omit<
-  GetPropertiesInBoundingBoxResponse[number],
-  "geom"
-> & {
-  geom: {
-    type: "Polygon";
-    coordinates: [number, number][][];
-  };
-};
+import { MAP_MAX_ZOOM } from "@/constants/mapConfig";
+import { calculateCentroid } from "@/utils";
+import type { GetPropertiesInBoundingBoxResponse } from "@/generated-api/apiComponents";
+import type { Property } from "@/generated-api/apiSchemas";
+import type { LatLngExpression } from "leaflet";
 
 export interface ClusterPointFeature {
   id: string | number;
   type: "Feature";
-  properties: Omit<PolygonFeature, "geom"> & {
-    originalGeom: PolygonFeature["geom"];
+  properties: {
+    property: Property;
     cluster: boolean;
     point_count: number;
   };
@@ -50,15 +41,13 @@ export function useMapClustering({
     if (!data) return [];
     return data.map((property) => {
       const centroid = calculateCentroid(
-        property.geom.coordinates as [number, number][][]
+        property.geom.coordinates as [number, number][][],
       );
-      const { geom, ..._property } = property;
       return {
         type: "Feature",
         properties: {
           cluster: false,
-          originalGeom: geom,
-          ..._property,
+          property,
         },
         geometry: {
           type: "Point",
@@ -77,11 +66,11 @@ export function useMapClustering({
 
   function onClusterClick(
     clusterId: number | string,
-    coordinates: LatLngExpression
+    coordinates: LatLngExpression,
   ) {
     const expansionZoom = Math.min(
       supercluster.getClusterExpansionZoom(clusterId),
-      MAP_MAX_ZOOM
+      MAP_MAX_ZOOM,
     );
 
     map.setView(coordinates, expansionZoom, {
