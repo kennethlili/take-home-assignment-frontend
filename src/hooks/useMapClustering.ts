@@ -25,6 +25,7 @@ export function useMapClustering({
   data,
   zoom,
   bounds,
+  isLoading,
 }: {
   data: GetPropertiesInBoundingBoxResponse | undefined;
   zoom: number;
@@ -34,6 +35,7 @@ export function useMapClustering({
     south: number;
     west: number;
   };
+  isLoading: boolean;
 }) {
   const map = useMap();
 
@@ -65,6 +67,7 @@ export function useMapClustering({
       radius: 30,
       maxZoom: MAP_MAX_ZOOM,
     },
+    disableRefresh: isLoading,
   });
 
   function onClusterClick(

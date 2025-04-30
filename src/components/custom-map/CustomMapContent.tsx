@@ -39,6 +39,7 @@ interface CustomMapContentProps {
   >;
   bounds: MapBounds;
   zoom: number;
+  isLoading: boolean;
 }
 
 export const CustomMapContent = ({
@@ -49,6 +50,7 @@ export const CustomMapContent = ({
   handleMapMove,
   zoom,
   bounds,
+  isLoading,
 }: CustomMapContentProps) => {
   const map = useMap();
 
@@ -83,6 +85,7 @@ export const CustomMapContent = ({
     data,
     zoom,
     bounds,
+    isLoading,
   });
 
   function onPropertyClick(property: Property) {

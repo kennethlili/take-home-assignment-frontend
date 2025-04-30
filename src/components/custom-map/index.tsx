@@ -23,6 +23,7 @@ interface CustomMapProps {
   >;
   zoom: number;
   bounds: MapBounds;
+  isLoading: boolean;
 }
 
 export const CustomMap = ({
@@ -33,6 +34,7 @@ export const CustomMap = ({
   handleMapMove,
   zoom,
   bounds,
+  isLoading,
 }: CustomMapProps) => {
   const mapRef = useRef(null);
 
@@ -52,6 +54,7 @@ export const CustomMap = ({
         handleMapMove={handleMapMove}
         zoom={zoom}
         bounds={bounds}
+        isLoading={isLoading}
       />
     </MapContainer>
   );
