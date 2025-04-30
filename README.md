@@ -1,54 +1,123 @@
-# React + TypeScript + Vite
+# Spatial Laser - Property Zoning Management Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+Spatial Laser is a powerful tool for property zoning management, offering features such as:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Viewing properties on an interactive map.
+- Managing multiple properties simultaneously.
+- Accessing detailed property information.
+- Updating zoning types for selected properties.
+- Analyzing statistics and metrics for selected properties.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Spatial Laser utilizes modern web technologies to provide a seamless and efficient user experience:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- **React 19 with TypeScript**: Ensures a robust, type-safe component architecture.
+- **Vite**: Delivers fast development and build processes.
+- **Tailwind CSS**: Enables responsive styling, enhanced with ShadCN UI components.
+- **Leaflet**: Powers interactive mapping and geospatial visualization.
+- **TanStack Query (React Query)**: Optimizes API data fetching and caching.
+- **Turf.js**: Supports advanced geospatial calculations and analysis.
+
+## Features
+
+### Interactive Map
+
+- Visualize property polygons on an interactive map.
+- Handle large datasets with clustering capabilities.
+- Select properties directly by clicking on the map.
+- View property boundaries and associated details.
+
+### Property Management
+
+- Access detailed property information via a collapsible sidebar.
+- Select multiple properties for batch operations.
+- Update zoning types for one or more properties.
+- Analyze aggregated statistics and metrics for selected properties.
+
+### User Interface
+
+- Fully responsive design for desktop and mobile devices.
+- Toggle between dark and light themes.
+- Collapsible sidebar to maximize map viewing space.
+
+## Getting Started
+
+### Prerequisites
+
+Ensure the following are installed:
+
+- **Node.js** (version 18 or higher)
+- **npm** or **yarn**
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/your-username/spatial-laser-frontend.git
+cd spatial-laser-frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install dependencies:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm install
 ```
+
+3. Set up environment variables:
+
+```bash
+cp .env.sample .env
+```
+
+Edit the `.env` file and set `VITE_API_BASE_URL` to point to your backend API.
+
+### Development
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+### Building for Production
+
+Build the application for production:
+
+```bash
+npm run build
+```
+
+### API Code Generation
+
+The project uses OpenAPI code generation to create TypeScript types and React Query hooks:
+
+- Generate API from the production endpoint:
+
+  ```bash
+  npm run api-codegen
+  ```
+
+- Generate API from the local development endpoint:
+
+  ```bash
+  npm run api-codegen-dev
+  ```
+
+## Architecture
+
+The project is organized into the following directories:
+
+- **`components`**: UI components organized by feature.
+- **`hooks`**: Custom React hooks for shared logic.
+- **`generated-api`**: Auto-generated API clients from the OpenAPI specification.
+- **`pages`**: Page components representing different routes.
+- **`constants`**: Application constants.
+- **`lib`**: Utility functions and shared code.
+
+## Deployment
+
+The application is configured for continuous deployment via GitHub Actions to Render.com.
