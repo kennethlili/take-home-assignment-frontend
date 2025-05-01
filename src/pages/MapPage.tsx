@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/sidebar/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { UpdateZoningTypeDialog } from "@/components/UpdateZoningTypeDialog";
 import { useGetPropertiesInBoundingBox } from "@/generated-api/apiComponents";
+import { useApiErrorToast } from "@/hooks/useApiErrorToast";
 import { useMapAttributes } from "@/hooks/useMapAttributes";
 import type { Property } from "@/generated-api/apiSchemas";
 
@@ -19,9 +20,22 @@ const MapPage = () => {
 
   const { bounds, handleMapMove, zoom } = useMapAttributes();
 
-  const { data, isLoading } = useGetPropertiesInBoundingBox({
+  const { data, isLoading, isError, error } = useGetPropertiesInBoundingBox({
     queryParams: bounds,
   });
+
+  let errorMessage = "Unknown error";
+  if (typeof error?.payload === "string") {
+    errorMessage = error.payload;
+  } else if (error?.payload) {
+    errorMessage = error.payload.message || "Unknown error";
+  }
+  useApiErrorToast({
+    isError,
+    title: "Error fetching properties",
+    description: errorMessage,
+  });
+
   function onClearSelection() {
     setSelectedProperties([]);
   }

@@ -75,7 +75,10 @@ export async function apiFetch<
     );
     if (!response.ok) {
       try {
-        error = await response.json();
+        error = {
+          status: response.status,
+          payload: await response.json(),
+        } as TError;
       } catch (e) {
         error = {
           status: "unknown" as const,

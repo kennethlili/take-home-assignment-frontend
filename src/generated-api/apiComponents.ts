@@ -14,7 +14,20 @@ type QueryFnOptions = {
   signal?: AbortController["signal"];
 };
 
-export type UpsertZoningTypesError = Fetcher.ErrorWrapper<undefined>;
+export type UpsertZoningTypesError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Schemas.ErrorResponse;
+    }
+  | {
+      status: 404;
+      payload: Schemas.ErrorResponse;
+    }
+  | {
+      status: 500;
+      payload: Schemas.ErrorResponse;
+    }
+>;
 
 export type UpsertZoningTypesResponse = Schemas.ZoningType[];
 
@@ -76,7 +89,16 @@ export type GetPropertiesInBoundingBoxQueryParams = {
   north: number;
 };
 
-export type GetPropertiesInBoundingBoxError = Fetcher.ErrorWrapper<undefined>;
+export type GetPropertiesInBoundingBoxError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Schemas.ErrorResponse;
+    }
+  | {
+      status: 500;
+      payload: Schemas.ErrorResponse;
+    }
+>;
 
 export type GetPropertiesInBoundingBoxResponse = Schemas.Property[];
 

@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { ZONING_TYPE } from "@/constants/enums";
 import { useUpsertZoningTypes } from "@/generated-api/apiComponents";
 import { queryKeyFn } from "@/generated-api/apiContext";
+import { useApiErrorToast } from "@/hooks/useApiErrorToast";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -52,6 +53,11 @@ export const UpdateZoningTypeDialog = ({
     queryClient.invalidateQueries({ queryKey: queryKey });
   }
 
+  const { toastError } = useApiErrorToast({
+    isError: false,
+    title: "Error updating zoning type",
+  });
+
   const { isPending: isLoading, mutate } = useUpsertZoningTypes({
     onSuccess: (responseData) => {
       // clear the cache for the properties in the bounding box
@@ -74,6 +80,15 @@ export const UpdateZoningTypeDialog = ({
 
       toast.success("Zoning type updated successfully");
       onClose();
+    },
+    onError: (error) => {
+      let message = "Unknown error";
+      if (typeof error?.payload === "string") {
+        message = error.payload;
+      } else if (error?.payload) {
+        message = error.payload.message || "Unknown error";
+      }
+      toastError({ description: message });
     },
   });
 

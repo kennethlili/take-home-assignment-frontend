@@ -16,6 +16,21 @@ export type ZoningUpdateRequest = {
   zoningType: "Residential" | "Commercial" | "Industrial" | "Planned";
 };
 
+export type ErrorResponse = {
+  /**
+   * @format int32
+   */
+  status?: number;
+  message?: string;
+  /**
+   * @format date-time
+   */
+  timestamp?: string;
+  errors?: {
+    [key: string]: string;
+  };
+};
+
 export type ZoningType = {
   /**
    * @format int64
