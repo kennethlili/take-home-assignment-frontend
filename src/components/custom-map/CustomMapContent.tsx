@@ -128,7 +128,7 @@ export const CustomMapContent = ({
                   key={`property-${property.id}`}
                   data={property.geom as GeoJSONProps["data"]}
                   isSelected={selectedProperties.some(
-                    (property) => property.id === property.id,
+                    (_property) => _property.id === property.id,
                   )}
                   onClick={() => {
                     onPropertyClick(property);
